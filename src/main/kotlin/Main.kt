@@ -1,3 +1,3 @@
-fun main(args: Array<String>) {
-    day1()
+fun main() {
+    day2()
 }
