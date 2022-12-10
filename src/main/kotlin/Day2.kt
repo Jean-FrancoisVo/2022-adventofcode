@@ -42,14 +42,14 @@ class Day2 {
         val lines = File("src/main/resources/day2.txt").readLines()
         val result = lines
             .map { it.split(" ") }
-            .map { Pair(Shape.opponent(it[0]), Shape.mine(it[1])) }
+            .map { Shape.opponent(it[0]) to Shape.mine(it[1]) }
             .map {
                 if (it.first == it.second) {
-                    Pair(Victor.DRAW, it.second)
+                    Victor.DRAW to it.second
                 } else if (it.first.winAgainst(it.second)) {
-                    Pair(Victor.OPPONENT, it.second)
+                    Victor.OPPONENT to it.second
                 } else {
-                    Pair(Victor.ME, it.second)
+                    Victor.ME to it.second
                 }
             }
         println("Total : ${result.sumOf { it.first.score + it.second.score }}")

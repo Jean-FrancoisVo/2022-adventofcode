@@ -47,12 +47,12 @@ class Day2Part2 {
         val lines = File("src/main/resources/day2.txt").readLines()
         val result = lines
             .map { it.split(" ") }
-            .map { Pair(Shape.opponent(it[0]), Outcome.of(it[1])) }
+            .map { Shape.opponent(it[0]) to Outcome.of(it[1]) }
             .map {
                 when (it.second) {
-                    Outcome.DRAW -> Pair(it.first, Outcome.DRAW)
-                    Outcome.WIN -> Pair(it.first.losingShape(), Outcome.WIN)
-                    Outcome.LOSE -> Pair(it.first.winningShape(), Outcome.LOSE)
+                    Outcome.DRAW -> it.first to Outcome.DRAW
+                    Outcome.WIN -> it.first.losingShape() to Outcome.WIN
+                    Outcome.LOSE -> it.first.winningShape() to Outcome.LOSE
                 }
             }
         println("Total : ${result.sumOf { it.first.score + it.second.score }}")

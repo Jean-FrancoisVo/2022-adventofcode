@@ -10,8 +10,9 @@ fun day1() {
             acc.last().add(s)
             acc
         }
-    }
-    println("Max top 1 : ${grouped.maxOfOrNull { list -> list.sumOf { it.toInt() } }}")
-    println("Sum top 3 : ${grouped.map { list -> list.sumOf { it.toInt() } }.sortedDescending().take(3).sum()}")
+    }.map { list -> list.sumOf { it.toInt() } }
+
+    println("Max top 1 : ${grouped.max() }")
+    println("Sum top 3 : ${grouped.sortedDescending().take(3).sum()}")
 
 }
