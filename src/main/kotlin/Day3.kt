@@ -22,8 +22,10 @@ fun divideIntoGroups(wholeList: List<String>): List<Triple<String, String, Strin
     wholeList.chunked(3)
         .map { Triple(it[0], it[1], it[2]) }
 
-fun findCommonItem(group: Triple<String, String, String>): Char? =
-    group.first.find { group.second.contains(it) && group.third.contains(it) }
+fun findCommonItem(group: Triple<String, String, String>): Char? {
+    val (first, second, third) = group
+    return first.find { second.contains(it) && third.contains(it) }
+}
 
 
 fun day3Part2() {
