@@ -3,13 +3,12 @@ import java.io.File
 val lines = File("src/main/resources/day4.txt").readLines()
 
 fun day4(check: (Collection<Any>, Collection<Any>, Collection<Any>) -> Boolean): Int = lines.count { line ->
-    val (firstTask, secondTask) = line.split(",")
-        .map { pairs ->
-            val (begin, end) = pairs.split("-").map { it.toInt() }
-            begin..end
-        }
+    val (firstTask, secondTask) = line.split(",", "-", limit = 4)
+        .map { it.toInt() }
+        .chunked(2)
+        .map { (a, b) -> a..b}
     val intersection = firstTask intersect secondTask
-    check(intersection, firstTask.toSet(), secondTask.toSet())
+    check(intersection, (firstTask).toSet(), (secondTask).toSet())
 }
 
 fun main() {
