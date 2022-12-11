@@ -16,3 +16,7 @@ fun day1() {
     println("Sum top 3 : ${grouped.sortedDescending().take(3).sum()}")
 
 }
+
+fun main() {
+    day1()
+}

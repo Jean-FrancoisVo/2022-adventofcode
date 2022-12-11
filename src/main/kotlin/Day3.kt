@@ -34,3 +34,8 @@ fun day3Part2() {
         .map { findCommonItem(it) }
         .sumOf { priorities(it) })
 }
+
+fun main() {
+    day3Part1()
+    day3Part2()
+}

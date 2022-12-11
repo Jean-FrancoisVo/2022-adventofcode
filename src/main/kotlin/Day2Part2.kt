@@ -60,3 +60,7 @@ class Day2Part2 {
     }
 
 }
+
+fun main() {
+    Day2Part2().result()
+}
