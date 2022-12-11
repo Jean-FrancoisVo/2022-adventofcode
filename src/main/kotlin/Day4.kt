@@ -2,15 +2,14 @@ import java.io.File
 
 val lines = File("src/main/resources/day4.txt").readLines()
 
-fun day4(check: (Collection<Any>, Collection<Any>, Collection<Any>) -> Boolean): Long = lines.sumOf { line ->
+fun day4(check: (Collection<Any>, Collection<Any>, Collection<Any>) -> Boolean): Int = lines.count { line ->
     val (firstTask, secondTask) = line.split(",")
-        .map { it.split("-").map { limit -> limit.toInt() } }
-        .map {
-            val (begin, end) = it
+        .map { pairs ->
+            val (begin, end) = pairs.split("-").map { it.toInt() }
             begin..end
         }
     val intersection = firstTask intersect secondTask
-    if (check(intersection, firstTask.toSet(), secondTask.toSet())) 1L else 0L
+    check(intersection, firstTask.toSet(), secondTask.toSet())
 }
 
 fun main() {
@@ -19,5 +18,5 @@ fun main() {
     println(day4(containsAll)) // 582
     val notEmpty: (Collection<Any>, Collection<Any>, Collection<Any>) -> Boolean =
         { a, _, _ -> a.isNotEmpty() }
-    println(day4(notEmpty))
+    println(day4(notEmpty)) // 893
 }
