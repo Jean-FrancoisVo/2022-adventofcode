@@ -1,4 +1,7 @@
-fun day5(lines: List<String>) {
+fun day5(
+    lines: List<String>,
+    mover: (stacks: List<ArrayDeque<String>>, to: Int, from: Int, quantity: Int) -> Unit
+) {
     val stacks = lines.subList(0, lines.indexOf(""))
         .map { it.chunked(4) { s -> s.replace(Regex("""[\[\]\W]"""), "") } }
         .dropLast(1)
@@ -14,10 +17,8 @@ fun day5(lines: List<String>) {
         }
 
     moves.forEach { move ->
-        val (quantity, from, to) = move
-        repeat((0 until quantity).count()) {
-            stacks[to - 1].push(stacks[from - 1].pop())
-        }
+        val (quantity, from, to) = move.mapIndexed { index, i -> if (index != 0) i - 1 else i }
+        mover(stacks, to, from, quantity)
     }
     println(stacks.joinToString("") { it.last() })
 }
@@ -39,5 +40,13 @@ fun <E> List<List<E>>.transpose2d(): List<List<E>> {
 
 fun main() {
     val lines = readInput("day5")
-    day5(lines)
+    day5(lines) { stacks, to, from, quantity ->
+        repeat((0 until quantity).count()) {
+            stacks[to].push(stacks[from].pop())
+        }
+    } // TDCHVHJTG
+    day5(lines) { stacks, to, from, quantity ->
+        stacks[to].addAll(stacks[to].size, stacks[from].takeLast(quantity))
+        repeat(quantity) { stacks[from].pop() }
+    } // NGCMPJLHV
 }
