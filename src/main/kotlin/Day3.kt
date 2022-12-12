@@ -3,7 +3,7 @@ import java.io.File
 fun Char.toPriority(): Int = if (this in 'a'..'z') this.code - 'a'.code - 1 else this.code - 'A'.code - 1
 
 fun day3Part1() {
-    val lines = File("src/main/resources/day3.txt").readLines()
+    val lines = readInput("day3")
     val result = lines
         .sumOf { rucksack ->
             val (first, second) = rucksack.chunked(rucksack.length / 2)
@@ -29,7 +29,7 @@ fun findCommonItem(group: Triple<String, String, String>): Char? {
 
 
 fun day3Part2() {
-    val lines = File("src/main/resources/day3.txt").readLines()
+    val lines = readInput("day3")
     println(divideIntoGroups(lines)
         .map { findCommonItem(it) }
         .sumOf { priorities(it) })

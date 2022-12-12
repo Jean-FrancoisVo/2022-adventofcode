@@ -1,6 +1,4 @@
-import java.io.File
-
-val lines = File("src/main/resources/day4.txt").readLines()
+val lines = readInput("day4")
 
 fun day4(check: (Collection<Any>, Collection<Any>, Collection<Any>) -> Boolean): Int = lines.count { line ->
     val (firstTask, secondTask) = line.split(",", "-", limit = 4)

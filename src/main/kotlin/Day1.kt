@@ -1,7 +1,5 @@
-import java.io.File
-
 fun day1() {
-    val lines = File("src/main/resources/day1.txt").readLines()
+    val lines = readInput("day1")
     val grouped = lines.fold(mutableListOf<MutableList<String>>(mutableListOf())) { acc, s ->
         if (s.isBlank()) {
             acc.add(mutableListOf())
@@ -12,7 +10,7 @@ fun day1() {
         }
     }.map { list -> list.sumOf { it.toInt() } }
 
-    println("Max top 1 : ${grouped.max() }")
+    println("Max top 1 : ${grouped.max()}")
     println("Sum top 3 : ${grouped.sortedDescending().take(3).sum()}")
 
 }
