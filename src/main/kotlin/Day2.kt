@@ -1,5 +1,3 @@
-import java.io.File
-
 class Day2 {
 
     enum class Victor(val score: Int) {

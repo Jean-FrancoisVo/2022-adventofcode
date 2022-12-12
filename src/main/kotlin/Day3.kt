@@ -1,5 +1,3 @@
-import java.io.File
-
 fun Char.toPriority(): Int = if (this in 'a'..'z') this.code - 'a'.code - 1 else this.code - 'A'.code - 1
 
 fun day3Part1() {
