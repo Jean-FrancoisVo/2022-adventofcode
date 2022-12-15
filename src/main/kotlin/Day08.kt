@@ -4,52 +4,46 @@ fun main() {
 }
 
 fun day8(lines: List<String>) {
-    val matrix = lines.map { line -> line.map { it.digitToInt() } }
-    val part1 =
-        (1 until matrix.size - 1)
-            .map { row -> (1 until matrix[0].size - 1).zip(Array(matrix[0].size - 1) { row }) }
-            .flatten()
-            .count { isVisible(matrix, it) } + matrix.size * 2 + matrix[0].size * 2 - 4
-    val part2 =
-        (1 until matrix.size - 1)
-            .map { row -> (1 until matrix[0].size - 1).zip(Array(matrix[0].size - 1) { row }) }
-            .flatten().maxOfOrNull { isVisible2(matrix, it) }
+    val layout = lines.map { line -> line.map { it.digitToInt() } }
+    val innerLayoutRowSize = layout.size - 1
+    val innerLayoutColSize = layout[0].size - 1
+    val innerTreesCoordinates = (1 until innerLayoutRowSize)
+        .map { row -> (1 until innerLayoutColSize).zip(Array(innerLayoutColSize) { row }) }
+        .flatten()
+    val outerLayoutCount = layout.size * 2 + layout[0].size * 2 - 4
+    val part1 = innerTreesCoordinates
+            .count { isVisible(layout, it, List<Int>::part1).fold(false) { acc, v -> acc || v.isEmpty() } } + outerLayoutCount
+    val part2 = innerTreesCoordinates
+            .maxOfOrNull { isVisible(layout, it, List<Int>::part2).fold(1) { acc, v -> acc * v.count() } }
     println(part1)
     println(part1 == 1827)
     println(part2)
     println(part2 == 335580)
 }
 
-private fun isVisible(matrix: List<List<Int>>, position: Pair<Int, Int>): Boolean {
+private fun isVisible(
+    matrix: List<List<Int>>,
+    position: Pair<Int, Int>,
+    fn: List<Int>.(IntProgression, Int) -> List<Int>,
+): List<List<Int>> {
     val (row, column) = position
     val rows = matrix.rowsAt(row)
     val columns = matrix.columnsAt(column)
-    return rows.isVisibleWithin((0 until column), column) // LEFT
-            || rows.isVisibleWithin((column + 1 until columns.size), column) // RIGHT
-            || columns.isVisibleWithin((0 until row), row) // TOP
-            || columns.isVisibleWithin((row + 1 until rows.size), row) // BOTTOM
+    return listOf(
+        rows.fn((column - 1 downTo 0), column), rows.fn((column + 1 until columns.size), column),
+        columns.fn((row - 1 downTo 0), row), columns.fn((row + 1 until rows.size), row)
+    )
 }
 
-private fun isVisible2(matrix: List<List<Int>>, position: Pair<Int, Int>): Int {
-    val (row, column) = position
-    val rows = matrix.rowsAt(row)
-    val columns = matrix.columnsAt(column)
-    return rows.toto((column - 1 downTo  0), column) *
-            rows.toto((column + 1 until columns.size), column) *
-            columns.toto((row - 1 downTo  0), row) *
-            columns.toto((row + 1 until rows.size), row)
-}
+private fun List<Int>.part1(range: IntProgression, position: Int): List<Int> =
+    range.map { this[it] }.filter { it >= this[position] }
 
-private fun List<Int>.isVisibleWithin(range: IntProgression, position: Int) =
-    this.filterIndexed { index, i -> index in range && i >= this[position] }
-        .isEmpty()
-
-private fun List<Int>.toto(range: IntProgression, position: Int): Int {
+private fun List<Int>.part2(range: IntProgression, position: Int): List<Int> {
     val biggerTree = range.map { this[it] }.indexOfFirst { it >= this[position] } + 1
     return if (biggerTree == 0) {
-        range.count()
+        range.toList()
     } else {
-        range.map{ this[it] }.take(biggerTree).count()
+        range.map { this[it] }.take(biggerTree)
     }
 }
 
