@@ -1,5 +1,4 @@
 import kotlin.math.abs
-import kotlin.math.sign
 
 fun main() {
     val lines = readInput("day09")
@@ -13,27 +12,17 @@ fun day9Part1(lines: List<String>): Int {
     val head = Point(0, 0)
     val tail = Point(0, 0)
     lines.forEach { line ->
-        val times = line.split(" ")[1].toInt()
-        when {
-            line.startsWith("R") -> repeat(times) {
-                head.move(Direction.RIGHT)
-                tail.follow(head)
-            }
-
-            line.startsWith("U") -> repeat(times) {
-                head.move(Direction.UP)
-                tail.follow(head)
-            }
-
-            line.startsWith("D") -> repeat(times) {
-                head.move(Direction.DOWN)
-                tail.follow(head)
-            }
-
-            line.startsWith("L") -> repeat(times) {
-                head.move(Direction.LEFT)
-                tail.follow(head)
-            }
+        val times = line.substringAfter(" ").toInt()
+        val direction = when (line.substringBefore(" ")) {
+            "R" -> Direction.RIGHT
+            "U" -> Direction.UP
+            "D" -> Direction.DOWN
+            "L" -> Direction.LEFT
+            else -> error("")
+        }
+        repeat(times) {
+            head.move(direction)
+            tail.follow(head)
         }
     }
     return tail.visited.count()
@@ -42,34 +31,18 @@ fun day9Part1(lines: List<String>): Int {
 fun day9Part2(lines: List<String>): Int {
     val rope = MutableList(10) { Point(0, 0) }
     lines.forEach { line ->
-        val times = line.split(" ")[1].toInt()
-        when {
-            line.startsWith("R") -> repeat(times) {
-                rope.head().move(Direction.RIGHT)
-                for (i in 1 until rope.size) {
-                    rope.tail(i).follow(rope.tail(i - 1))
-                }
-            }
-
-            line.startsWith("U") -> repeat(times) {
-                rope.head().move(Direction.UP)
-                for (i in 1 until rope.size) {
-                    rope.tail(i).follow(rope.tail(i - 1))
-                }
-            }
-
-            line.startsWith("D") -> repeat(times) {
-                rope.head().move(Direction.DOWN)
-                for (i in 1 until rope.size) {
-                    rope.tail(i).follow(rope.tail(i - 1))
-                }
-            }
-
-            line.startsWith("L") -> repeat(times) {
-                rope.head().move(Direction.LEFT)
-                for (i in 1 until rope.size) {
-                    rope.tail(i).follow(rope.tail(i - 1))
-                }
+        val times = line.substringAfter(" ").toInt()
+        val direction = when (line.substringBefore(" ")) {
+            "R" -> Direction.RIGHT
+            "U" -> Direction.UP
+            "D" -> Direction.DOWN
+            "L" -> Direction.LEFT
+            else -> error("")
+        }
+        repeat(times) {
+            rope.head().move(direction)
+            rope.drop(1).indices.forEach { i ->
+                rope.tail(i + 1).follow(rope.tail(i))
             }
         }
     }
@@ -93,7 +66,6 @@ data class Point(private var x: Int, private var y: Int) {
     }
 
     fun follow(point: Point) {
-        (2 + 1).sign
         if (manhattanDistance(point) == 2 && !onDiagonale(point)) {
             moveSameDirectionAs(point)
         } else if (manhattanDistance(point) > 2) {
@@ -117,14 +89,17 @@ data class Point(private var x: Int, private var y: Int) {
                 x++
                 y++
             }
+
             point.x - x > 0 && point.y - y < 0 -> {
                 x++
                 y--
             }
+
             point.x - x < 0 && point.y - y > 0 -> {
                 x--
                 y++
             }
+
             point.x - x < 0 && point.y - y < 0 -> {
                 x--
                 y--
